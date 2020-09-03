@@ -26,7 +26,7 @@ Applies the same fit but on 4 evenly split segments of the dataset. Displays err
 
 
 ## Walk through of code logic
-1) Pulls data and cleans it up a little by selecting the 300th entry and beyond
+1) Pulls data and cleans it up a little by selecting the data past t=300sec and beyond
 2) Based on user inputs, sets variables that will be used later for fitting specifications
 3) Conical Pendulum Function
 - Has inputs of x: time, amp: amplitude, g: gravity, B: drag coefficient, and shift: vertical shift
