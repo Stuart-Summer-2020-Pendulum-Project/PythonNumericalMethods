@@ -27,7 +27,7 @@ Applies the same fit but on 4 evenly split segments of the dataset. Displays err
 ## Inputs/Outputs
 - Input: Experiment # to analyze (valid integer)
 - Output: 
-  - 1 Plot containing fit vs data and a legend displaying ChiSq/MSE values. 
+  - 1 Plot displaying the numerical fit vs data, and a legend containing the fit's ChiSq/MSE values. 
   - Optimized values of G and B will output to the terminal, with standard deviations.
 
 ## Walk through of code logic
