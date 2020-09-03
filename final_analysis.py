@@ -11,7 +11,6 @@ import datetime # to keep track of run time
 from sklearn.metrics import mean_squared_error   # Calculates error between fit and data
 from scipy import stats  # Calculates ChiSq (goodness of fit)
 
-
 exp = input("Input the number corresponding to the experiment you wish to analyze: (6 or 7): ")
 
 def pull_data(n):
@@ -21,31 +20,13 @@ def pull_data(n):
    data =  data[300:]
    return data
 
+
+timer = 'DOF time'   # We only use DOF times, since it corresponds to acc_z data!
 df = pull_data(exp)     #all of the data is now in this df!
-
-### Sets variable to "d" or "acc_z", important for logic when selecting analysis types later
-check = False
-var = 0
-timer = ''
-while check == False:
-   acc_or_d = input("Analyze acc_z (m/s.2) or distance (mm) data?: Input a or d  ")
-   if acc_or_d == 'd':
-      var = 'd'
-      timer = 'TOF time'
-      shift = 40     # Sets a higher vertical mid point for d data
-      check = True
-   elif acc_or_d == 'a':
-      var = 'acc_z'
-      timer = 'DOF time'
-      shift = 10
-      check = True
-
 df = df.loc[(df[timer] >= 200)] # Lets only analyze good data (Ignore the first 200 seconds due to huge decay)
 
 
-
 ###---Defining our numerical solution based model!---###
-
 def conical_pend(x, amp, g, B, shift):
 
    t = x.tolist()
@@ -110,18 +91,17 @@ def conical_pend(x, amp, g, B, shift):
       az=[(i*amp)+shift for i in az]
       return az
 
-
-
 #### plotting our models with metrics ####
+var = "acc_z"     # our variable of interest!
+shift = 10       # The data rests at roughly a midpoint of 10 on the y-axis
+target = df[var] # Actual Acc_z Values
 
-
-target = df[var]  # We will later calculate error metrics by comparing to this array df[d] or df[acc_z]
-
-params, params_covariance = optimize.curve_fit(conical_pend, df[timer], df[var],
+params, params_covariance = optimize.curve_fit(conical_pend, df[timer], target,
                                                p0=[0.1, 9.81, 0.02, shift], maxfev=1000)  # We help python with an initial guess of G = 9.81 and B = 0.02
 
 
-prediction = conical_pend(df[timer], params[0], params[1], params[2], params[3])  # We store our predicted acc_z or d values in this array
+prediction = conical_pend(df[timer], params[0], params[1], params[2], params[3])
+# We store our predicted acc_z or d values in the array above
 
 
 # Calculating errors
@@ -130,14 +110,16 @@ chi = stats.chisquare(f_obs = target, f_exp = prediction)
 
 #formatting everything for results.
 print("\nPredicted Values")
+print("----------------------------------------------------------------------")
 label = "Numerical Fit: MSE=" + str(round(y,7)) + ", ChiSq=" + str(round(chi[0],4))
-print("For numerical fit: g =", params[1], "+/-", round(np.sqrt(np.diag(params_covariance))[1],5))
+print("g =", params[1], "+/-", round(np.sqrt(np.diag(params_covariance))[1],5))
 print("B =", params[2], "+/-", round(np.sqrt(np.diag(params_covariance))[2],5))
 print("\n")
 
 
 #Finally plotting the fit over our raw data
-plt.figure(figsize=(12,8))
+plt.figure(figsize=(16,8))
+plt.rc('axes', labelsize=14)
 plt.plot(df[timer], df[var], label='Raw Data', alpha = 0.5)
 plt.plot(df[timer], prediction, label=label, alpha=0.9)
 plt.xlabel("time(s)")
@@ -146,12 +128,3 @@ plt.ylabel(str(var))
 plt.title("Results of fit", fontsize="xx-large")
 plt.legend(loc='best')
 plt.show()
-
-
-
-
-
-
-
-
-
