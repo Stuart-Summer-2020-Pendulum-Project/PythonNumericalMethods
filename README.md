@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Prompts the user for 2 inputs: # of experiment to analyze, and the type of data to analyze. This python script will then solve the pendulum motion numerically, while also finding the best parameters that will minize error with respect to the selected data. The program will plot this optimized fit against the data and ChiSq/MeanSq error values. Predicted values and standard deviations of g and B (drag coefficient) will be displayed in the terminal.
+This python script will then solve the pendulum motion numerically, while also finding the best parameters that will minize error with respect to the selected data. The program will plot this optimized fit against the data and ChiSq/MeanSq error values. Predicted values and standard deviations of g and B (drag coefficient) will be displayed in the terminal.
 
 Program can be used and understood by students that know how to navigate OS directories, running python through linux/terminal. The approximate run-time of the script is 20 seconds. 
 
@@ -24,6 +24,9 @@ The script that fits an accurate model onto our raw data.
 - SummerResearch_Backtest.py
 Applies the same fit but on 4 evenly split segments of the dataset. Displays error thru terminal for each partition
 
+## Inputs/Outputs
+- Input: Experiment # to analyze (valid integer)
+- Output: 1 Plot containing fit vs data and a legend displaying ChiSq/MSE values. Optimized values of G and B will output to the terminal.
 
 ## Walk through of code logic
 1) Pulls data and cleans it up a little by selecting the data past t=300sec and beyond
